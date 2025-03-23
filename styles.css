@@ -1,0 +1,121 @@
+/* Common styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #fff9c4;
+}
+
+.hero-bg {
+    background-color: #fff9c4;
+}
+
+.custom-button {
+    background-color: #ffd54f;
+    color: #000000;
+}
+
+.custom-button:hover {
+    background-color: #ffecb3;
+}
+
+/* RGB Animated text styles */
+.animated-text {
+    font-size: 2.5rem;
+    font-weight: bold;
+    background: linear-gradient(45deg, 
+        rgb(255, 0, 0),    /* Red */
+        rgb(0, 255, 0),    /* Green */
+        rgb(0, 0, 255),    /* Blue */
+        rgb(255, 0, 0)     /* Back to Red */
+    );
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: rgbGradient 8s ease infinite;
+    text-align: center;
+    letter-spacing: 2px;
+}
+
+@keyframes rgbGradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+.text-glow {
+    animation: siren-glow 0.4s steps(2, start) infinite;
+}
+
+@keyframes siren-glow {
+    0% {
+        text-shadow: 
+            0 0 10px rgb(255, 0, 0),
+            0 0 20px rgb(255, 0, 0),
+            0 0 30px rgb(255, 0, 0),
+            0 0 40px rgb(255, 0, 0);
+    }
+    50% {
+        text-shadow: 
+            0 0 10px rgb(0, 0, 255),
+            0 0 20px rgb(0, 0, 255),
+            0 0 30px rgb(0, 0, 255),
+            0 0 40px rgb(0, 0, 255);
+    }
+    100% {
+        text-shadow: 
+            0 0 10px rgb(255, 0, 0),
+            0 0 20px rgb(255, 0, 0),
+            0 0 30px rgb(255, 0, 0),
+            0 0 40px rgb(255, 0, 0);
+    }
+}
+
+
+/* Tree visualization styles */
+.tree-node {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #ffd54f;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    color: #1f2937;
+    font-weight: 600;
+    position: absolute;
+    transition: all 0.3s ease;
+}
+
+.tree-node.highlight {
+    background-color: #ffd54f !important;
+    color: #000000 !important;
+    transform: scale(1.1);
+}
+
+.tree-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tree-level {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+    width: 100%;
+}
+
+.connector {
+    position: absolute;
+    background-color: #ffd54f;
+    height: 2px;
+    transform-origin: left center;
+    z-index: -1;
+} 
