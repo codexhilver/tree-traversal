@@ -1,19 +1,24 @@
-// Node class for creating tree nodes
 class Node {
     constructor(value) {
-        this.value = value;
-        this.left = null;
-        this.right = null;
+        this.value = value;    // The value stored in this node
+        this.left = null;      // Reference to left child
+        this.right = null;     // Reference to right child
     }
 }
 
-// Binary Search Tree class
+/**
+ * Binary Search Tree Class
+ * Implements a balanced binary search tree with traversal methods
+ */
 class BinarySearchTree {
     constructor() {
-        this.root = null;
+        this.root = null;      // Root node of the tree
     }
 
-    // Insert into BST
+    /**
+     * Inserts a single value into the BST
+     * @param {number} value - The value to insert
+     */
     insert(value) {
         const newNode = new Node(value);
         
@@ -44,7 +49,13 @@ class BinarySearchTree {
         }
     }
 
-    // Create a balanced BST from sorted array
+    /**
+     * Creates a balanced BST from a sorted array
+     * @param {Array} arr - Sorted array of values
+     * @param {number} start - Starting index
+     * @param {number} end - Ending index
+     * @returns {Node} Root node of the balanced tree
+     */
     createBalancedBST(arr, start = 0, end = arr.length - 1) {
         if (start > end) return null;
         
@@ -57,67 +68,56 @@ class BinarySearchTree {
         return node;
     }
 
-    // Insert array of values as balanced BST
+    /**
+     * Inserts an array of values as a balanced BST
+     * @param {Array} values - Array of values to insert
+     */
     insertArray(values) {
-        // Sort the values
         const sortedValues = [...values].sort((a, b) => a - b);
         this.root = this.createBalancedBST(sortedValues);
     }
 
-    // Improved traversal methods with better clarity
+    /**
+     * Pre-order traversal: Root -> Left -> Right
+     * @returns {Array} Array of values in pre-order
+     */
     preOrder(node = this.root, result = []) {
         if (!node) return result;
-        
-        // Visit root first
         result.push(node.value);
-        
-        // Then traverse left subtree
         this.preOrder(node.left, result);
-        
-        // Finally traverse right subtree
         this.preOrder(node.right, result);
-        
         return result;
     }
 
+    /**
+     * In-order traversal: Left -> Root -> Right
+     * @returns {Array} Array of values in in-order
+     */
     inOrder(node = this.root, result = []) {
         if (!node) return result;
-        
-        // First traverse left subtree
         this.inOrder(node.left, result);
-        
-        // Then visit root
         result.push(node.value);
-        
-        // Finally traverse right subtree
         this.inOrder(node.right, result);
-        
         return result;
     }
 
+    /**
+     * Post-order traversal: Left -> Right -> Root
+     * @returns {Array} Array of values in post-order
+     */
     postOrder(node = this.root, result = []) {
         if (!node) return result;
-        
-        // First traverse left subtree
         this.postOrder(node.left, result);
-        
-        // Then traverse right subtree
         this.postOrder(node.right, result);
-        
-        // Finally visit root
         result.push(node.value);
-        
         return result;
-    }
-
-    // Helper method to get tree height
-    getHeight(node = this.root) {
-        if (!node) return 0;
-        return Math.max(this.getHeight(node.left), this.getHeight(node.right)) + 1;
     }
 }
 
-// Helper function to validate input
+/**
+ * Input Validation and Processing
+ */
+// Validates user input to ensure it contains valid, unique numbers
 function validateInput(input) {
     const cleanInput = input.replace(/[^\d,\s]/g, '').trim();
     if (!cleanInput) return false;
@@ -125,17 +125,15 @@ function validateInput(input) {
     const numbers = cleanInput.split(/[,\s]+/).filter(num => num.trim() !== '');
     if (numbers.length === 0) return false;
     
-    // Check if all numbers are valid
+    // Check if all numbers are valid and unique
     if (!numbers.every(num => !isNaN(num) && num.trim() !== '')) return false;
-    
-    // Check for unique numbers
     const uniqueNumbers = new Set(numbers);
     if (uniqueNumbers.size !== numbers.length) return false;
     
     return true;
 }
 
-// Helper function to parse input string into array of numbers
+// Converts input string into array of numbers
 function parseInput(input) {
     return input.replace(/[^\d,\s]/g, '')
                 .split(/[,\s]+/)
@@ -143,16 +141,19 @@ function parseInput(input) {
                 .map(num => parseInt(num.trim()));
 }
 
-// Improved tree node creation with better styling
+/**
+ * Tree Visualization Functions
+ */
+// Creates a visual node element for the tree
 function createTreeNode(value) {
     const node = document.createElement('div');
-    node.className = 'tree-node bg-white border-2 border-yellow-500 rounded-full w-12 h-12 flex items-center justify-center font-semibold text-gray-800 relative z-10 transition-all duration-300';
+    node.className = 'tree-node bg-white border-2 border-green-600 rounded-full w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center font-semibold text-green-800 relative z-10 transition-all duration-300 text-sm sm:text-base shadow-md';
     node.setAttribute('data-value', value);
     node.textContent = value;
     return node;
 }
 
-// Improved connecting lines with better visibility
+// Draws connecting lines between tree nodes
 function drawConnectingLines(container, levels) {
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("width", "100%");
@@ -175,45 +176,9 @@ function drawConnectingLines(container, levels) {
                 const parentRect = parentElement.getBoundingClientRect();
                 const containerRect = container.getBoundingClientRect();
 
-                // Draw line to left child
-                if (node.left) {
-                    const leftChildIndex = nodeArray.findIndex(el => 
-                        parseInt(el.getAttribute('data-value')) === node.left.value
-                    );
-                    if (leftChildIndex !== -1) {
-                        const leftChildElement = nodeArray[leftChildIndex];
-                        const leftChildRect = leftChildElement.getBoundingClientRect();
-
-                        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-                        line.setAttribute("x1", parentRect.left - containerRect.left + parentRect.width / 2);
-                        line.setAttribute("y1", parentRect.top - containerRect.top + parentRect.height / 2);
-                        line.setAttribute("x2", leftChildRect.left - containerRect.left + leftChildRect.width / 2);
-                        line.setAttribute("y2", leftChildRect.top - containerRect.top + leftChildRect.height / 2);
-                        line.setAttribute("stroke", "#FFD54F");
-                        line.setAttribute("stroke-width", "2");
-                        svg.appendChild(line);
-                    }
-                }
-
-                // Draw line to right child
-                if (node.right) {
-                    const rightChildIndex = nodeArray.findIndex(el => 
-                        parseInt(el.getAttribute('data-value')) === node.right.value
-                    );
-                    if (rightChildIndex !== -1) {
-                        const rightChildElement = nodeArray[rightChildIndex];
-                        const rightChildRect = rightChildElement.getBoundingClientRect();
-
-                        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-                        line.setAttribute("x1", parentRect.left - containerRect.left + parentRect.width / 2);
-                        line.setAttribute("y1", parentRect.top - containerRect.top + parentRect.height / 2);
-                        line.setAttribute("x2", rightChildRect.left - containerRect.left + rightChildRect.width / 2);
-                        line.setAttribute("y2", rightChildRect.top - containerRect.top + rightChildRect.height / 2);
-                        line.setAttribute("stroke", "#FFD54F");
-                        line.setAttribute("stroke-width", "2");
-                        svg.appendChild(line);
-                    }
-                }
+                // Draw lines to children
+                if (node.left) drawLineToChild(svg, parentRect, containerRect, node.left, nodeArray);
+                if (node.right) drawLineToChild(svg, parentRect, containerRect, node.right, nodeArray);
 
                 processedNodes.add(parentElement);
             }
@@ -222,36 +187,53 @@ function drawConnectingLines(container, levels) {
     });
 }
 
-// Improved tree visualization with better spacing
+// Helper function to draw a line to a child node
+function drawLineToChild(svg, parentRect, containerRect, childNode, nodeArray) {
+    const childIndex = nodeArray.findIndex(el => 
+        parseInt(el.getAttribute('data-value')) === childNode.value
+    );
+    if (childIndex !== -1) {
+        const childElement = nodeArray[childIndex];
+        const childRect = childElement.getBoundingClientRect();
+
+        const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        line.setAttribute("x1", parentRect.left - containerRect.left + parentRect.width / 2);
+        line.setAttribute("y1", parentRect.top - containerRect.top + parentRect.height / 2);
+        line.setAttribute("x2", childRect.left - containerRect.left + childRect.width / 2);
+        line.setAttribute("y2", childRect.top - containerRect.top + childRect.height / 2);
+        line.setAttribute("stroke", "#16a34a");
+        line.setAttribute("stroke-width", "1.5");
+        svg.appendChild(line);
+    }
+}
+
+// Creates the visual representation of the tree
 function visualizeTree(root, container) {
     container.innerHTML = '';
     if (!root) return;
 
     const treeContainer = document.createElement('div');
-    treeContainer.className = 'relative pt-8';
-    treeContainer.style.minHeight = '400px';
+    treeContainer.className = 'relative pt-4 sm:pt-8';
+    treeContainer.style.minHeight = '300px';
     container.appendChild(treeContainer);
 
+    // Create levels array for tree structure
     const levels = [];
     const queue = [{node: root, level: 0}];
     
     while (queue.length > 0) {
         const {node, level} = queue.shift();
-        
-        if (!levels[level]) {
-            levels[level] = [];
-        }
-        
+        if (!levels[level]) levels[level] = [];
         levels[level].push(node);
         
         if (node.left) queue.push({node: node.left, level: level + 1});
         if (node.right) queue.push({node: node.right, level: level + 1});
     }
     
-    // Create and position nodes with improved spacing
+    // Create visual nodes for each level
     levels.forEach((level, i) => {
         const levelDiv = document.createElement('div');
-        levelDiv.className = `tree-level flex justify-center items-center space-x-16 mb-16`;
+        levelDiv.className = `tree-level flex justify-center items-center space-x-4 sm:space-x-8 md:space-x-16 mb-8 sm:mb-12 md:mb-16`;
         
         level.forEach(node => {
             const nodeDiv = createTreeNode(node.value);
@@ -265,20 +247,22 @@ function visualizeTree(root, container) {
     setTimeout(() => drawConnectingLines(treeContainer, levels), 100);
 }
 
-// Improved traversal highlighting with better visual feedback
+/**
+ * Traversal Visualization Functions
+ */
 let isTraversalInProgress = false;
 
+// Shows a temporary validation message
 function showValidationMessage(message) {
     const validationDiv = document.createElement('div');
     validationDiv.className = 'fixed top-4 right-4 bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded shadow-lg z-50';
     validationDiv.textContent = message;
     document.body.appendChild(validationDiv);
     
-    setTimeout(() => {
-        validationDiv.remove();
-    }, 2000);
+    setTimeout(() => validationDiv.remove(), 2000);
 }
 
+// Updates the traversal status message
 function showTraversalStatus(type) {
     const statusDiv = document.getElementById('traversal-status');
     if (statusDiv) {
@@ -287,19 +271,21 @@ function showTraversalStatus(type) {
     }
 }
 
+// Clears the traversal status message
 function clearTraversalStatus() {
     const statusDiv = document.getElementById('traversal-status');
-    if (statusDiv) {
-        statusDiv.textContent = '';
-    }
+    if (statusDiv) statusDiv.textContent = '';
 }
 
+// Highlights nodes during traversal
 function highlightTraversal(traversalArray, traversalType) {
     if (isTraversalInProgress) return;
     
     isTraversalInProgress = true;
     showTraversalStatus(traversalType);
-    const buttons = document.querySelectorAll('.custom-button');
+    
+    // Disable buttons during traversal
+    const buttons = document.querySelectorAll('button');
     buttons.forEach(button => {
         button.disabled = true;
         button.style.opacity = '0.7';
@@ -311,10 +297,11 @@ function highlightTraversal(traversalArray, traversalType) {
     
     function highlight() {
         if (currentIndex >= traversalArray.length) {
+            // Reset nodes and re-enable buttons
             nodes.forEach(node => {
                 node.classList.remove('highlight');
                 node.style.backgroundColor = 'white';
-                node.style.color = '#1f2937';
+                node.style.color = '#166534';
             });
             isTraversalInProgress = false;
             clearTraversalStatus();
@@ -326,12 +313,14 @@ function highlightTraversal(traversalArray, traversalType) {
             return;
         }
         
+        // Reset all nodes
         nodes.forEach(node => {
             node.classList.remove('highlight');
             node.style.backgroundColor = 'white';
-            node.style.color = '#1f2937';
+            node.style.color = '#166534';
         });
         
+        // Highlight current node
         const value = traversalArray[currentIndex];
         const node = Array.from(nodes).find(node => 
             parseInt(node.getAttribute('data-value')) === value
@@ -339,8 +328,8 @@ function highlightTraversal(traversalArray, traversalType) {
         
         if (node) {
             node.classList.add('highlight');
-            node.style.backgroundColor = '#ffd54f';
-            node.style.color = '#000000';
+            node.style.backgroundColor = '#22c55e';
+            node.style.color = '#ffffff';
             currentIndex++;
             setTimeout(highlight, 1000);
         }
@@ -349,83 +338,85 @@ function highlightTraversal(traversalArray, traversalType) {
     highlight();
 }
 
-// Initialize page-specific functionality
+/**
+ * Initialize UI Elements and Event Listeners
+ */
+
+const bst = new BinarySearchTree();
+const generateBtn = document.getElementById('generate-btn');
+const generateAnotherBtn = document.getElementById('generate-another');
+const numbersInput = document.getElementById('numbers');
+const errorMessage = document.getElementById('error-message');
+const treeSection = document.getElementById('tree-section');
+const treeContainer = document.getElementById('tree-container');
+const preOrderBtn = document.getElementById('pre-order');
+const inOrderBtn = document.getElementById('in-order');
+const postOrderBtn = document.getElementById('post-order');
+const traversalStatus = document.getElementById('traversal-status');
+
+// Event Listeners
+generateBtn.addEventListener('click', () => {
+    const input = numbersInput.value;
+    
+    if (!validateInput(input)) {
+        errorMessage.classList.remove('hidden');
+        treeSection.classList.add('hidden');
+        return;
+    }
+    
+    errorMessage.classList.add('hidden');
+    const values = parseInput(input);
+    bst.insertArray(values);
+    visualizeTree(bst.root, treeContainer);
+    treeSection.classList.remove('hidden');
+});
+
+generateAnotherBtn.addEventListener('click', () => {
+    numbersInput.value = '';
+    treeSection.classList.add('hidden');
+    errorMessage.classList.add('hidden');
+    clearTraversalStatus();
+    bst.root = null;
+});
+
+preOrderBtn.addEventListener('click', () => {
+    if (!bst.root) return;
+    if (isTraversalInProgress) {
+        showValidationMessage('Please wait for the current traversal to complete');
+        return;
+    }
+    const traversal = bst.preOrder();
+    highlightTraversal(traversal, 'Pre-order');
+});
+
+inOrderBtn.addEventListener('click', () => {
+    if (!bst.root) return;
+    if (isTraversalInProgress) {
+        showValidationMessage('Please wait for the current traversal to complete');
+        return;
+    }
+    const traversal = bst.inOrder();
+    highlightTraversal(traversal, 'In-order');
+});
+
+postOrderBtn.addEventListener('click', () => {
+    if (!bst.root) return;
+    if (isTraversalInProgress) {
+        showValidationMessage('Please wait for the current traversal to complete');
+        return;
+    }
+    const traversal = bst.postOrder();
+    highlightTraversal(traversal, 'Post-order');
+});
+
+// Initialize page functionality
 document.addEventListener('DOMContentLoaded', () => {
-    if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
-        const generateBtn = document.getElementById('generate-btn');
-        const inputField = document.getElementById('numbers');
-        const errorMessage = document.getElementById('error-message');
-
-        if (generateBtn && inputField && errorMessage) {
-            inputField.addEventListener('focus', () => {
-                if (inputField.value === inputField.placeholder) {
-                    inputField.value = '';
-                }
-            });
-
-            generateBtn.addEventListener('click', () => {
-                const input = inputField.value;
-                if (!validateInput(input)) {
-                    errorMessage.classList.remove('hidden');
-                    return;
-                }
-                
-                errorMessage.classList.add('hidden');
-                const numbers = parseInput(input);
-                localStorage.setItem('treeData', JSON.stringify(numbers));
-                window.location.href = 'tree.html';
-            });
-        }
-    } else if (window.location.pathname.endsWith('tree.html')) {
-        const treeContainer = document.getElementById('tree-container');
-        const errorMessage = document.getElementById('error-message');
-        
-        if (treeContainer && errorMessage) {
-            const treeData = localStorage.getItem('treeData');
-            if (!treeData) {
-                errorMessage.classList.remove('hidden');
-                treeContainer.style.display = 'none';
-                return;
+    const inputField = document.getElementById('numbers');
+    if (inputField) {
+        inputField.addEventListener('focus', () => {
+            if (inputField.value === inputField.placeholder) {
+                inputField.value = '';
             }
-            
-            const numbers = JSON.parse(treeData);
-            const tree = new BinarySearchTree();
-            tree.insertArray(numbers);
-            
-            visualizeTree(tree.root, treeContainer);
-            
-            const preOrderBtn = document.getElementById('pre-order');
-            const inOrderBtn = document.getElementById('in-order');
-            const postOrderBtn = document.getElementById('post-order');
-            
-            if (preOrderBtn && inOrderBtn && postOrderBtn) {
-                preOrderBtn.addEventListener('click', () => {
-                    if (isTraversalInProgress) {
-                        showValidationMessage('Please wait for the current traversal to complete');
-                        return;
-                    }
-                    const traversal = tree.preOrder();
-                    highlightTraversal(traversal, 'Pre-order');
-                });
-                
-                inOrderBtn.addEventListener('click', () => {
-                    if (isTraversalInProgress) {
-                        showValidationMessage('Please wait for the current traversal to complete');
-                        return;
-                    }
-                    const traversal = tree.inOrder();
-                    highlightTraversal(traversal, 'In-order');
-                });
-                
-                postOrderBtn.addEventListener('click', () => {
-                    if (isTraversalInProgress) {
-                        showValidationMessage('Please wait for the current traversal to complete');
-                        return;
-                    }
-                    const traversal = tree.postOrder();
-                    highlightTraversal(traversal, 'Post-order');
-                });
-            }
-        }
+        });
     }
 });
