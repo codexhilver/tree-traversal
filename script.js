@@ -420,3 +420,26 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// Function to generate random numbers
+function generateRandomNumbers() {
+    const min = 5;  // Minimum number
+    const max = 15; // Maximum number
+    const count = Math.floor(Math.random() * (max - min + 1)) + min; // Random count between min and max
+    
+    // Generate unique random numbers
+    const numbers = new Set();
+    while (numbers.size < count) {
+        numbers.add(Math.floor(Math.random() * 100) + 1); // Random numbers between 1 and 100
+    }
+    
+    // Convert to array and sort
+    const sortedNumbers = Array.from(numbers).sort((a, b) => a - b);
+    
+    // Update the input field
+    const inputField = document.getElementById('numbers');
+    inputField.value = sortedNumbers.join(', ');
+}
+
+// Add event listener for the random number generator button
+document.getElementById('generate-random').addEventListener('click', generateRandomNumbers);
